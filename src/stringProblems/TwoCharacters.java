@@ -1,5 +1,7 @@
 package stringProblems;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 // from challenge here: https://www.hackerrank.com/challenges/two-characters
@@ -27,41 +29,79 @@ public class TwoCharacters {
 		}
 	}
 	
-	private static List<Character> findCharsMustBeRemoved(char[] str) {
-		List<Character> mustRemove = new LinkedList<Character>();
-		for (int i = 1; i < str.length; i++) {
-			if (str[i] == str[i - 1] && !mustRemove.contains(str[i])) {
-				mustRemove.add(str[i]);
-			}
+	private static void updateCounts(int letter, int[][] letters, int[][] counts) {
+		
+		for (int i = 0; i < letters.length; i++) {
+			if (i != letter) {
+				if (letters[letter][i] == letter) {
+					counts[letter][i] = -1;
+				} else if (counts[letter][i] != -1) {
+					counts[letter][i] = counts[letter][i] + 1;
+				}
+				
+				if (letters[i][letter] == letter) {
+					counts[i][letter] = -1;
+				} else if (counts[i][letter] != -1) {
+					counts[i][letter] = counts[i][letter] + 1;
+				}
+			} 
+			
+			// set row
+			letters[letter][i] = letter;
+			//set column
+			letters[i][letter] = letter;
 		}
-		return mustRemove;
-	}
 	
+	}
+		
 	private static int findMinimumString(String str) {
-		HashMap<Character, Integer> charSet = new HashMap<Character, Integer>();
-		char[] string = str.toCharArray();
-		for (int i = 0; i < string.length; i++) {
-			if (!charSet.containsKey(string[i]))
-				charSet.put(string[i], 1);
-			else {
-				charSet.put(string[i], charSet.get(string[i]) + 1);
-			}
+		str.toLowerCase();
+		
+		// creating a matrix for each letter combination
+		int[][] letters = new int[6][];
+		// creating a matrix to check the letter combination counts that occur
+		int[][] letterCounts = new int[6][]; 
+		
+		// initialize all to -1
+		for (int i = 0; i < letters.length; i++) {
+			letters[i] = new int[6];
+			Arrays.fill(letters[i], -1);
+			
+			letterCounts[i] = new int[6];
 		}
 		
-		List<Character> mustRemove = findCharsMustBeRemoved(string);
-		for (Character temp : mustRemove)
-		{
-			charSet.remove(temp);
-			str.replace("" + temp, "");
+		char[] chars = str.toCharArray();
+		for (int i = 0; i < chars.length; i++){
+			updateCounts(chars[i] - 'a', letters, letterCounts);
 		}
 		
-		
+        for (int[] arr : letters) {
+            System.out.println(Arrays.toString(arr));
+        }
+        
+        System.out.println("----------");
+        
+        for (int[] arr : letterCounts) {
+            System.out.println(Arrays.toString(arr));
+        }
 		
 		return 0;
 	}
 	
 	public static void main(String[] args) {
-		Scanner scan = new Scanner(System.in);
+		Scanner scan = null;
+		
+		if (args != null && args.length > 0 && args[0].equals("-d")) {
+			try {
+				scan = new Scanner(new File(args[1]));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				scan = new Scanner(System.in);
+			}
+		} else {
+			scan = new Scanner(System.in);
+		}
+		
 		int length = scan.nextInt();
 		String str = scan.next();
 		
