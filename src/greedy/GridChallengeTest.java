@@ -13,4 +13,16 @@ public class GridChallengeTest {
 		assertArrayEquals(new char[] {'a','b'}, test);
 	}
 
+	@Test
+	public void testBubbleSort() {
+		char[] toTest = "gabriel".toCharArray();
+		GridChallenge.bubbleSort(toTest);
+		assertArrayEquals("abegilr".toCharArray(), toTest);
+	}
+	
+	@Test
+	public void testIsArrangeable() {
+		char[][] toTest = {"xy".toCharArray(), "ba".toCharArray()};
+		assertFalse(GridChallenge.isArrangeable(toTest));
+	}
 }

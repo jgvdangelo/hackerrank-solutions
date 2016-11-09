@@ -56,6 +56,7 @@ public class TwoCharacters {
 		}
 		
 		
+		
 		return 0;
 	}
 	

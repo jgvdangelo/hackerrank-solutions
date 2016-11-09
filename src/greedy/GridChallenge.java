@@ -1,5 +1,7 @@
 package greedy;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 //from challenge here: https://www.hackerrank.com/challenges/grid-challenge
@@ -19,23 +21,21 @@ public class GridChallenge {
 		return true;
 	}
 	
-	private static void bubbleSort(char[] array) {
-		int currIndex = 0;
+	public static void bubbleSort(char[] array) {
+		int endIndex = array.length;
 		while (!isSorted(array)) {
-			if (currIndex < array.length - 1) {
-				if (array[currIndex] > array[currIndex + 1]) {
-					swap(array, currIndex, currIndex + 1);
-					currIndex++;
-				} else {
-					currIndex = 0;
+			
+			for (int i = 0; i < endIndex - 1; i++) {
+				if ((int) array[i] > (int) array[i + 1]) {
+					swap(array, i, i + 1);
 				}
-			} else {
-				currIndex = 0;
 			}
+			
+			endIndex--;
 		}
 	}
 	
-	private static boolean isArrangeable(char[][] grid) {
+	public static boolean isArrangeable(char[][] grid) {
 		if (grid.length == 1)
 			return true;
 
@@ -45,11 +45,31 @@ public class GridChallenge {
 		for (int i = 0; i < grid.length; i++) {
 			bubbleSort(grid[i]);
 		}
-		return false;
+		
+		for (int i = 0; i < grid.length - 1; i++) {
+			for (int j = 0; j < grid.length; j++) {
+				if ((int)grid[i][j] > (int)grid[i + 1][j])
+					return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	public static void main(String[] args) {
-		Scanner scan = new Scanner(System.in);
+		Scanner scan = null;
+		
+		if (args != null && args.length > 0 && args[0].equals("-d")) {
+			try {
+				scan = new Scanner(new File(args[1]));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				scan = new Scanner(System.in);
+			}
+		} else {
+			scan = new Scanner(System.in);
+		}
+		
 		int testCases = scan.nextInt();
 		
 		// initialize loop variables
@@ -58,12 +78,12 @@ public class GridChallenge {
 		
 		char[][] grid;
 		
-		for (int k = 0; k < length; k++) {
+		for (int k = 0; k < testCases; k++) {
 			length = scan.nextInt();
 			grid = new char[length][];
 			
 			for (int i = 0; i < length; i++) {
-				line = scan.nextLine();
+				line = scan.next();
 				grid[i] = line.toCharArray();
 			}
 			System.out.println(isArrangeable(grid) ? "YES" : "NO");
