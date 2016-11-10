@@ -8,13 +8,15 @@ import java.util.*;
 public class TwoCharacters {
 	private static boolean isValidString(String str) {
 		if (str.length() == 1 || str.length() == 0)
-			return true;
+			return false;
 		else if (str.length() == 2) {
 			return str.charAt(0) != str.charAt(1);
 		} else {
 			char[] charStr = str.toCharArray();
 			char evens = charStr[0];
 			char odds = charStr[1];
+			if (evens == odds)
+				return false;
 			char toCompare;
 			for (int i = 2; i < charStr.length; i++) {
 				if (i % 2 == 1) 
@@ -54,20 +56,23 @@ public class TwoCharacters {
 	
 	}
 		
-	private static int findMinimumString(String str) {
+	private static int findMaximumString(String str) {
+		if (str.length() == 1 || str.length() == 0)
+			return 0;
+		
 		str.toLowerCase();
 		
 		// creating a matrix for each letter combination
-		int[][] letters = new int[6][];
+		int[][] letters = new int[26][];
 		// creating a matrix to check the letter combination counts that occur
-		int[][] letterCounts = new int[6][]; 
+		int[][] letterCounts = new int[26][]; 
 		
 		// initialize all to -1
 		for (int i = 0; i < letters.length; i++) {
-			letters[i] = new int[6];
+			letters[i] = new int[26];
 			Arrays.fill(letters[i], -1);
 			
-			letterCounts[i] = new int[6];
+			letterCounts[i] = new int[26];
 		}
 		
 		char[] chars = str.toCharArray();
@@ -75,17 +80,17 @@ public class TwoCharacters {
 			updateCounts(chars[i] - 'a', letters, letterCounts);
 		}
 		
-        for (int[] arr : letters) {
-            System.out.println(Arrays.toString(arr));
-        }
-        
-        System.out.println("----------");
-        
-        for (int[] arr : letterCounts) {
-            System.out.println(Arrays.toString(arr));
-        }
+		// find max in counts matrix
+		int max = -1;
+		for (int i = 0; i < letterCounts.length; i++) {
+			for (int j = 0; j < letterCounts.length; j++) {
+				if (letterCounts[i][j] > max) {
+					max = letterCounts[i][j];
+				}
+			}
+		}
 		
-		return 0;
+		return max;
 	}
 	
 	public static void main(String[] args) {
@@ -107,6 +112,6 @@ public class TwoCharacters {
 		
 		scan.close();
 		
-		System.out.println(isValidString(str) ? str : findMinimumString(str));
+		System.out.println(isValidString(str) ? str.length() : findMaximumString(str));
 	}
 }
