@@ -32,6 +32,7 @@ public class LuckBalance {
 		
 		while (!importantScores.isEmpty() && k > 0) {
 			balance += importantScores.remove(0);
+			k--;
 		}
 		
 		while (!importantScores.isEmpty()) {
